@@ -61,5 +61,5 @@ More details on each step are provided in the following sections:
 - *17_MvPA_PLOTS*. Plot the activity intensity distribution for each age group using the multivariate pattern analysis. (Figures 4 and 6)
 
 ## Step 5 - Sensitivity analysis (60s epoch)
-- For the sensitivity, the same codes are used to replicate all the previous analyses using a 60s instead of a 15s epoch.
+- For the *SENSITIVITY ANALYSIS*, the same codes are used to replicate all the previous analyses using a 60s instead of a 15s epoch.
 - *SA_FDA_AREA*. Additional analysis estimating the difference in BMI associated with a shift of 10 minutes from the time spent above this acceleration to the time spent in non-null acceleration below these values.
