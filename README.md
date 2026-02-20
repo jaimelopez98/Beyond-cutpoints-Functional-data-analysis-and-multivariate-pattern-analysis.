@@ -19,7 +19,7 @@ Data were analysed using R 3.6.1 (http://www.r-project.org), analyses required d
 - *tidyfun* for data preparation (version 0.0.98, https://tidyfun.github.io/tidyfun/index.html)
 - *ggplot2* for illustrating plots of functional coefficients (version 3.5.1, https://cran.r-project.org/web/packages/ggplot2/ggplot2.pdf)
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
+![Flowchart of the procedures for the paper](<img width="4345" height="2289" alt="Image" src="https://github.com/user-attachments/assets/0b39c8de-3492-42c8-a573-fee0ecb8df09" />)
 
 More details on each step are provided in the following sections:
 
