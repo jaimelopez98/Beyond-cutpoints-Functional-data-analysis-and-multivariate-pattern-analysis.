@@ -22,7 +22,7 @@ Data were analysed using R 3.6.1 (http://www.r-project.org), analyses required d
 - *tidyfun* for data preparation (version 0.0.98, https://tidyfun.github.io/tidyfun/index.html)
 - *ggplot2* for illustrating plots of functional coefficients (version 3.5.1, https://cran.r-project.org/web/packages/ggplot2/ggplot2.pdf)
 
-<img width="1434" height="779" alt="Image" src="https://github.com/user-attachments/assets/2586a5c8-81d0-4ddb-8f11-d002cd06f3f8" />
+<img width="1432" height="768" alt="Image" src="https://github.com/user-attachments/assets/d2db451e-2556-4c15-8e01-7e1c0174198d" />
 
 More details on each step are provided in the following sections:
 
@@ -57,7 +57,7 @@ More details on each step are provided in the following sections:
 
 ## Step 4 -  Multivariate pattern analysis
 
-- For multivariate pattern analysis, we use the Shiny app (https://liningtonlab.github.io/mvpaShiny_documentation/publication/R_script/), and we extract the multivariate correlation coefficients for each age group.
+- For multivariate pattern analysis, we use the *Shiny app* (https://liningtonlab.github.io/mvpaShiny_documentation/publication/R_script/), and we extract the multivariate correlation coefficients for each age group.
 - *18_MvPA_PLOTS*. Plot the activity intensity distribution for each age group using the multivariate pattern analysis. (Figures 4 and 6)
 
 ## Step 5 - Sensitivity analysis (60s epoch)
