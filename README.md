@@ -1,6 +1,6 @@
 # Beyond-cutpoints-Functional-data-analysis-and-multivariate-pattern-analysis.
 
-This repository includes the codes needed to replicate the analysis done in Beyond Cut-points: Using Advanced Statistical Approaches to refine the understanding of the Associations between Accelerometer-Measured Activity Intensity and Health. A LABDA project.
+This repository includes the codes needed to replicate the analysis done in the paper: Beyond Cut-points: Using Advanced Statistical Approaches to refine the understanding of the Associations between Accelerometer-Measured Activity Intensity and Health. A LABDA project. (doi:xxx)
 
 Code to examine the added value of investigating the high-resolution activity intensity distribution using advanced statistical approaches (Functional data analysis and Multivariate pattern analysis), rather than cut-point-derived intensities, in its associations with body mass index (BMI) across age (3-90y):
 
