@@ -2,7 +2,9 @@
 
 This repository includes the codes needed to replicate the analysis done in the paper: Beyond Cut-points: Using Advanced Statistical Approaches to refine the understanding of the Associations between Accelerometer-Measured Activity Intensity and Health. A LABDA project. (doi:xxx)
 
-Code to examine the added value of investigating the high-resolution activity intensity distribution using advanced statistical approaches (Functional data analysis and Multivariate pattern analysis), rather than cut-point-derived intensities, in its associations with body mass index (BMI) across age (3-90y):
+This study aims to examine the added value of investigating the high-resolution activity intensity distribution using advanced statistical approaches (Functional data analysis and Multivariate pattern analysis), rather than cut-point-derived intensities, in its associations with body mass index (BMI) across age (3-90y). 
+
+It includes 3 different approaches:
 
   1) Multiple Linear regression using 3 different sets of cut-points for youths (3-17y) and adulthood (18-90y).
   2) Scalar-on-function regression, assessing associations across the continuous activity intensity distribution (0–2000 counts/15s).
