@@ -17,9 +17,6 @@ Data were analysed using R 3.6.1 (http://www.r-project.org), analyses required d
 - tidyfun for data preparation (version 0.0.98, https://tidyfun.github.io/tidyfun/index.html)
 - ggplot2 for illustrating plots of functional coefficients (version 3.5.1, https://cran.r-project.org/web/packages/ggplot2/ggplot2.pdf)
 
-Here is a schema of the workflow: 
-
-
 More details on each step are provided in the following sections:
 
 ## Step 0 - Data preparation
@@ -42,7 +39,7 @@ More details on each step are provided in the following sections:
 - 10_CUTPOINTS_MODELS. Modelling for SB and each PA intensity on weekdays and weekend days, separately.
 - 11_CUTPOINTS_DATA. Extracting coefficients from linear regression models (Table 3 from the manuscript).
 
-## Step 3 - Functional data analysis (scalar-on-function regression)
+## Step 3 - Functional data analysis (Scalar-on-function regression)
 
 - 12_ACT_KERNEL. Characterising the probability density function of each individual using the kernel smoothing method.
 - 13_ACT_STANDARD. Standardising kernel densities.
