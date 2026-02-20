@@ -22,7 +22,7 @@ Data were analysed using R 3.6.1 (http://www.r-project.org), analyses required d
 - *tidyfun* for data preparation (version 0.0.98, https://tidyfun.github.io/tidyfun/index.html)
 - *ggplot2* for illustrating plots of functional coefficients (version 3.5.1, https://cran.r-project.org/web/packages/ggplot2/ggplot2.pdf)
 
-<img width="1432" height="768" alt="Image" src="https://github.com/user-attachments/assets/d2db451e-2556-4c15-8e01-7e1c0174198d" />
+<img width="1359" height="726" alt="Image" src="https://github.com/user-attachments/assets/29987244-5e81-47e5-8405-c197191ad4b4" />
 
 More details on each step are provided in the following sections:
 
@@ -42,23 +42,24 @@ More details on each step are provided in the following sections:
 
 ## Step 2 - Cut-point approach (Multiple Linear regression) 
 
-- *09_CUTPOINTS_DATA*. Preparation of data for each age group.
-- *10_CUTPOINTS_MODELS*. Modelling for SB and each PA intensity for each age group.
-- *11_CUTPOINTS_DATA*. Extracting coefficients from linear regression models (Table S4 and S5).
+- *08_CUTPOINTS_ANOVA*. Comparison of SB and PA estimates derived from the three different sets of cut-points. 
+- *09_CUTPOINTS_MODELS*. Modelling for SB and each PA intensity for each age group.
+- *10_CUTPOINTS_COEF*. Extracting coefficients from linear regression models (Table S4 and S5).
 
 ## Step 3 - Functional data analysis (Scalar-on-function regression)
 
-- 12_ACT_KERNEL. Characterising the probability density function of each individual using the kernel smoothing method.
-- *13_ACT_STANDARD*. Standardising kernel densities.
-- *14_ACT_DISTRIBUTION*. Estimating activity distribution.
-- *15_ACT_DATA*. Preparation of data for modelling in each age group.
-- *16_ACT_MODELS*. Modelling for each age group.
-- *17_ACT_PLOTS*. Plot the activity intensity distribution for each age group using functional data analysis. (Figures 3 and 5)
+- *11_ACT_KERNEL*. Characterising the probability density function of each individual using the kernel smoothing method.
+- *12_ACT_STANDARD*. Standardising kernel densities.
+- *13_ACT_DISTRIBUTION*. Estimating activity distribution.
+- *14_ACT_DATA*. Preparation of data for modelling in each age group.
+- *15_ACT_MODELS*. Modelling for each age group.
+- *16_ACT_PLOTS*. Plot the activity intensity distribution for each age group using functional data analysis. (Figures 3 and 5)
 
 ## Step 4 -  Multivariate pattern analysis
 
 - For multivariate pattern analysis, we use the *Shiny app* (https://liningtonlab.github.io/mvpaShiny_documentation/publication/R_script/), and we extract the multivariate correlation coefficients for each age group.
-- *18_MvPA_PLOTS*. Plot the activity intensity distribution for each age group using the multivariate pattern analysis. (Figures 4 and 6)
+- *17_MvPA_PLOTS*. Plot the activity intensity distribution for each age group using the multivariate pattern analysis. (Figures 4 and 6)
 
 ## Step 5 - Sensitivity analysis (60s epoch)
-- For the sensitivity, the same codes are used to replicate all the previous analyses using a 60s instead of 15s epoch.
+- For the sensitivity, the same codes are used to replicate all the previous analyses using a 60s instead of a 15s epoch.
+- SA_FDA_AREA. Additional analysis estimating the difference in BMI associated with a shift of 10 minutes from the time spent above this acceleration to the time spent in non-null acceleration below these values.
