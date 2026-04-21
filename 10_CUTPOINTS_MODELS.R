@@ -1,4 +1,4 @@
-# Script name: 11_CUTPOINTS_MODELS.R
+# Script name: 10_CUTPOINTS_MODELS.R
 
 # Author: J.Lopez, Inserm
 
