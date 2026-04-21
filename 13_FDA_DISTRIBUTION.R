@@ -1,4 +1,4 @@
-# Script name: 14_FDA_DISTRIBUTON.R
+# Script name: 13_FDA_DISTRIBUTON.R
 
 # Author: J.López, Inserm
 
