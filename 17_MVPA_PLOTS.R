@@ -1,4 +1,4 @@
-# Script name: 18_MVPA_PLOTS.R
+# Script name: 17_MVPA_PLOTS.R
 
 # Author: J.Lopez, Inserm
 
