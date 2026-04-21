@@ -1,4 +1,4 @@
-# Script name: 12_FDA_KERNEL.R
+# Script name: 11_FDA_KERNEL.R
 
 # Author: J.López, Inserm
 
