@@ -1,4 +1,4 @@
-# Script name: 10_CUTPOINTS_COEF.R
+# Script name: 09_CUTPOINTS_COEF.R
 
 # Author: J.Lopez, Inserm
 
