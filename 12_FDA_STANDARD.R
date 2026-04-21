@@ -1,4 +1,4 @@
-# Script name: 13_FDA_STANDARD.R
+# Script name: 12_FDA_STANDARD.R
 
 # Author: J.López, Inserm
 
