@@ -52,7 +52,7 @@ plot_activity_distribution_15 <- function(data, age_col, title, cut1, cut2, cut3
     )
 }
 
-load("C:/Users/j_lopez/Desktop/paper2/analysis/15s/fda/data/act_15.rda") # data derived from code 14_FDA_DISTRIBUTION
+load("path/act_15.rda") # data derived from code 14_FDA_DISTRIBUTION
 
 data_presc <- act %>%
   filter(age<6) %>%
@@ -170,7 +170,7 @@ plot_activity_distribution_60 <- function(data, age_col, title, cut1, cut2, cut3
     )
 }
 
-load("C:/Users/j_lopez/Desktop/paper2/analysis/60s/fda/data/act_60.rda") # data derived from code 14_FDA_DISTRIBUTION
+load("path/act_60.rda") # data derived from code 14_FDA_DISTRIBUTION
 
 data_presc <- act %>%
   filter(age<6) %>%
