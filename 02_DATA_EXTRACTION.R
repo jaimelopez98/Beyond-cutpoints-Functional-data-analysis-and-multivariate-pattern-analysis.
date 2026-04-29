@@ -64,7 +64,7 @@ acc_data <- data.frame(files = list.files(path = path.files,
          timeserie = as.POSIXct(format(timenum, format = "%H:%M:%S"), format = "%H:%M:%S"), #create a new column with the same day for all (TIME-SERIES)
          weekday = wday(timenum), # extract the day ("Sunday" = 1, "Monday" = 2, ...) #extract the day of the week
          daytype = ifelse(wday(timenum) %in% 2:6, 0, 1), # extract the type of day (WD = 0  vs WE = 1) 
-         calendar_date = as.Date(format(timenum, format = "%Y-%m-%d"),format = "%Y-%m-%d")) %>% 
+         calendar_date = as.Date(format(timenum, format = "%Y-%m-%d"),format = "%Y-%m-%d"))
 
 # Restricting the time window
   
