@@ -18,14 +18,14 @@ mpa_15_plot <- function(data, mpa_cuts, mpa_labels,col_plot, title) {
                   position = position_dodge(width = 0.9), 
                   width = 0.5) + 
     geom_hline(yintercept = 0, size = 0.5) +
-    geom_vline(xintercept = 5.5, linetype = "dashed", color = "red", size = 0.5) + # for adults 
-    geom_vline(xintercept = 15.5, linetype = "dashed", color = "red", size = 0.5) + # for adults
-    geom_vline(xintercept = 19.5, linetype = "dashed", color = "red", size = 0.5) + # for adults 23.5
+    geom_vline(xintercept = 5.5, linetype = "dashed", color = "red", size = 0.5) +
+    geom_vline(xintercept = 15.5, linetype = "dashed", color = "red", size = 0.5) +
+    geom_vline(xintercept = 19.5, linetype = "dashed", color = "red", size = 0.5) + 
     
-    annotate("text", x = 2,  y = 0.25, label = "SB",  size = 5, family = "Times New Roman") + # for adults
-    annotate("text", x = 10.5,   y = 0.25, label = "LIPA", size = 5, family = "Times New Roman") + # for adults
-    annotate("text", x = 17.5,   y = 0.25, label = "MPA", size = 5, family = "Times New Roman") + # for adults
-    annotate("text", x = 22.5,   y = 0.25, label = "VPA", size = 5, family = "Times New Roman") + # for adults 24.5
+    annotate("text", x = 2,  y = 0.25, label = "SB",  size = 5, family = "Times New Roman") + 
+    annotate("text", x = 10.5,   y = 0.25, label = "LIPA", size = 5, family = "Times New Roman") + 
+    annotate("text", x = 17.5,   y = 0.25, label = "MPA", size = 5, family = "Times New Roman") + 
+    annotate("text", x = 22.5,   y = 0.25, label = "VPA", size = 5, family = "Times New Roman") + 
     
     labs(
       x = "Intensity distribution (counts/15s)", 
