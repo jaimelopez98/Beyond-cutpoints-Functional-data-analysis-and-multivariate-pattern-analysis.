@@ -4,37 +4,33 @@ library(mgcv)
 library(dplyr)
 
 # DATA ----
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_presc.rda")
+load("path/data_presc.rda")
 data_presc$Y_Activity <- data_presc$Y_Activity
 data_presc$ACC_0_0 <- data_presc$ACC_0_0
 
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_child.rda")
+load("path/data_child.rda")
 data_child$Y_Activity <- data_child$Y_Activity
 data_child$ACC_0_0 <- data_child$ACC_0_0
 
-data_child <- data_child %>% filter(stno != 465 & stno != 666 & stno != 669)
-
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_adoles.rda")
+load("path/data_adoles.rda")
 data_adoles$Y_Activity <- data_adoles$Y_Activity
 data_adoles$ACC_0_0 <- data_adoles$ACC_0_0
 
-data_adoles <- data_adoles %>% filter (stno != 1643)
-
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_younger.rda")
+load("path/data_younger.rda")
 data_younger$Y_Activity <- data_younger$Y_Activity
 data_younger$ACC_0_0 <- data_younger$ACC_0_0
 
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_middle.rda")
+load("path/data_middle.rda")
 data_middle$Y_Activity <- data_middle$Y_Activity
 data_middle$ACC_0_0 <- data_middle$ACC_0_0
 
-load("C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/models/data_older.rda")
+load("path/data_older.rda")
 data_older$Y_Activity <- data_older$Y_Activity
 data_older$ACC_0_0 <- data_older$ACC_0_0
 
 # PARAMETERS ----
-pts <- round(seq(1:2340))
-c_value <- 2340
+pts <- round(seq(1:2000))
+c_value <- 2000
 nboot <- 1000
 
 # PRESCHOOLERS (n=1137) ----
@@ -124,7 +120,7 @@ beta_mat_boot <- matrix(NA, nboot, length(s_pred))
   }
 
 beta_mat_boot_presc <- beta_mat_boot
-save(beta_mat_boot_presc, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_presc.rda")
+save(beta_mat_boot_presc, file = "path/beta_matrix_presc.rda")
 
   # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -145,8 +141,8 @@ zero_presc <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_presc, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_presc.rda")
-#save(zero_presc, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_presc.rda")
+save(beta_presc, file = "path/beta_presc.rda")
+#save(zero_presc, file = "path/zero_presc.rda")
 
 # CHILDREN (n=1245) ----
 
@@ -235,7 +231,7 @@ for (i in 1:nboot) {
 }
 
 beta_mat_boot_child <- beta_mat_boot
-save(beta_mat_boot_child, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_child.rda")
+save(beta_mat_boot_child, file = "path/beta_matrix_child.rda")
 
 # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -256,8 +252,8 @@ zero_child <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_child, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_child.rda")
-#save(zero_child, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_child.rda")
+save(beta_child, file = "path/beta_child.rda")
+#save(zero_child, file = "path/zero_child.rda")
 
 # ADOLESCENTS (n=465) ----
 
@@ -346,7 +342,7 @@ for (i in 1:nboot) {
 }
 
 beta_mat_boot_adoles <- beta_mat_boot
-save(beta_mat_boot_adoles, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_adoles.rda")
+save(beta_mat_boot_adoles, file = "path/beta_matrix_adoles.rda")
 
 # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -367,8 +363,8 @@ zero_adoles <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_adoles, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_adoles.rda")
-#save(zero_adoles, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_adoles.rda")
+save(beta_adoles, file = "path/beta_adoles.rda")
+#save(zero_adoles, file = "path/zero_adoles.rda")
 
 # YOUNGER ADULTS (n=1447) ----
 
@@ -457,7 +453,7 @@ for (i in 1:nboot) {
 }
 
 beta_mat_boot_younger <- beta_mat_boot
-save(beta_mat_boot_younger, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_younger.rda")
+save(beta_mat_boot_younger, file = "path/beta_matrix_younger.rda")
 
 # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -478,8 +474,8 @@ zero_younger <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_younger, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_younger.rda")
-#save(zero_younger, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_younger.rda")
+save(beta_younger, file = "path/beta_younger.rda")
+#save(zero_younger, file = "path/zero_younger.rda")
 
 # MIDDLE ADULTS (n=1757) ----
 
@@ -568,7 +564,7 @@ for (i in 1:nboot) {
 }
 
 beta_mat_boot_middle <- beta_mat_boot
-save(beta_mat_boot_middle, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_middle.rda")
+save(beta_mat_boot_middle, file = "path/beta_matrix_middle.rda")
 
 # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -589,8 +585,8 @@ zero_middle <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_middle, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_middle.rda")
-#save(zero_middle, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_middle.rda")
+save(beta_middle, file = "path/beta_middle.rda")
+#save(zero_middle, file = "path/zero_middle.rda")
 
 # OLDER ADULTS (n=1051) ----
 
@@ -679,7 +675,7 @@ for (i in 1:nboot) {
 }
 
 beta_mat_boot_older <- beta_mat_boot
-save(beta_mat_boot_older, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_matrix_older.rda")
+save(beta_mat_boot_older, file = "path/beta_matrix_older.rda")
 
 # Max statistic and global confidence band
 dvec <- apply(beta_mat_boot, 1, function(x) max(abs(x - beta_hat) / se_beta_hat))
@@ -700,5 +696,5 @@ zero_older <- data.frame(
   lower = zero_hat_LB,
   upper = zero_hat_UB)
 
-save(beta_older, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/beta_older.rda")
-#save(zero_older, file = "C:/Users/jlopez/Desktop/analyses/data/all/15s/fda/coefficients/zero_older.rda")
+save(beta_older, file = "path/beta_older.rda")
+#save(zero_older, file = "path/zero_older.rda")
