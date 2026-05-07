@@ -12,17 +12,21 @@ library(tidyr)
 library(tidyfun)
 
 # PARAMETERS
-s_grid <- 1:2340
+s_grid <- 1:2000
 ds <- diff(s_grid)[1]
+
+# ACT DATA
+
+load("path/act_15.rda")
+
+# LINEAR APPROACH ----
 
 # CHILDREN ----
 # DATA
 
-load("path/act_15.rda")
+load("path/data_child.rda")
 
-load("path/models/data_child.rda")
-
-load("path/coefficients/result_beta_child.rda")
+load("path/beta_child.rda")
 
 act_child <- act %>% filter(age >=6 & age <11)
 
@@ -31,58 +35,41 @@ pa_child <- act_child %>%
   arrange(stno) %>%
   select(-gender, -age, -age_cat,-season,-edu)
 
-pa_child_region1 <- pa_child[,c(1,174:475)]
-pa_child_region1 <- pa_child_region1 %>% 
-  mutate(region1 = rowSums(across(-1))) %>%
-  select(stno, region1)
+pa_child_region <- pa_child[,c(1,919:2001)]
+pa_child_region <- pa_child_region %>% 
+  mutate(region = rowSums(across(-1))) %>%
+  select(stno, region)
 
-pa_child_region2 <- pa_child[,c(1,926:1918)]
-pa_child_region2 <- pa_child_region2 %>% 
-  mutate(region2 = rowSums(across(-1))) %>%
-  select(stno, region2)
-
-pa_child_regions <- merge(pa_child_region1,pa_child_region2, by= "stno")
-
-data_child <- merge(data_child,pa_child_regions, by= "stno")
+data_child <- merge(data_child,pa_child_region, by= "stno") %>% filter(stno != 465 & stno != 666 & stno != 669)
 
 data_child_region <- data_child %>%
-  select(stno, bmi, region1, region2,wear_kernel, wear_min_day, age, gender, edu_cat1, edu_cat2, 
+  select(stno, bmi, region, wear_kernel, ACC_0_0, age, gender, edu_cat1, edu_cat2, 
          study_cat1, season_cat1, season_cat2, season_cat3, study_cat1, study_cat2)
 
-# AREA UNDER THE CURVE (beta coefficients)
-# Region 1 (positive area between 173 and 474)
+# LINEAR MODEL FOR A SPECIFIC REGION
+# Region (negative area between 919 and 2000)
 
-idxB_child1 <- which(s_grid >=173 & s_grid <= 474)
-A_B_child1 <- sum(result_beta_child[idxB_child1,2]*ds)
-
-lm_region1_child <-  lm(bmi ~ region1 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3 + study_cat1 + study_cat2,
-                    data = data_child_region)
-summary(lm_region1_child)
-
-A_B_child1/(474-173)
-summary(lm_region1_child)$coefficients[2,1]*10
-
-# Region 2 (negative area between 925 and 2340)
-
-idxB_child2  <- which(s_grid >=925 & s_grid <=1917)
-A_B_child2 <- sum(result_beta_child[idxB_child2 ,2]*ds)
-
-lm_region2_child <- lm(bmi ~ region2 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3 + study_cat1 + study_cat2,
+lm_region_child <- lm(bmi ~ region + wear_kernel + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3 + study_cat1 + study_cat2,
                         data = data_child_region)
 
-summary(lm_region2_child)
+summary(lm_region_child)
+delta_child <- summary(lm_region_child)$coefficients[2,1]*10
+lower_child <- confint(lm_region_child)[2,1]*10
+upper_child <- confint(lm_region_child)[2,2]*10
 
-A_B_child2/(1917-925)
-summary(lm_region2_child)$coefficients[2,1]*10
+child_change <- data.frame(
+  Age_group = "Children (6-10y)",
+  Delta = round(delta_child,2),
+  Upper = round(upper_child,2),
+  Lower = round(lower_child,2)
+)
 
 # ADOLESCENTS ----
 # DATA
 
-load("path/act_15.rda")
-
 load("path/data_adoles.rda")
 
-load("path/result_beta_adoles.rda")
+load("path/beta_adoles.rda")
 
 act_adoles <- act %>% filter(age >=11 & age <18)
 
@@ -91,38 +78,41 @@ pa_adoles <- act_adoles %>%
   arrange(stno) %>%
   select(-gender, -age, -age_cat,-season,-edu)
 
-pa_adoles_region1 <- pa_adoles[,c(1,1351:2064)]
-pa_adoles_region1 <- pa_adoles_region1 %>% 
-  mutate(region1 = rowSums(across(-1))) %>%
-  select(stno, region1)
+pa_adoles_region <- pa_adoles[,c(1,1362:2001)]
+pa_adoles_region <- pa_adoles_region %>% 
+  mutate(region = rowSums(across(-1))) %>%
+  select(stno, region)
 
-data_adoles <- merge(data_adoles,pa_adoles_region1, by= "stno")
+data_adoles <- merge(data_adoles,pa_adoles_region, by= "stno") %>% filter (stno != 1643)
 
 data_adoles_region <- data_adoles %>%
-  select(stno, bmi, region1, wear_min_day, age, gender, edu_cat1, edu_cat2, 
+  select(stno, bmi, region, wear_kernel, ACC_0_0, age, gender, edu_cat1, edu_cat2, 
          study_cat1, season_cat1, season_cat2, season_cat3, study_cat1, study_cat2)
 
-# AREA UNDER THE CURVE (beta coefficients)
-# Region 1 (positive area between 1350 and 2063)
+# LINEAR MODEL FOR A SPECIFIC REGION
+# Region (negative area between 1381 and 2000)
 
-idxB_adoles1 <- which(s_grid >=1350 & s_grid <= 2063)
-A_B_adoles1 <- sum(result_beta_adoles[idxB_adoles1,2]*ds)
+lm_region_adoles <- lm(bmi ~ region + wear_kernel + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
+                      data = data_adoles_region)
 
-lm_region1_adoles <-  lm(bmi ~ region1 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                          data = data_adoles_region)
-summary(lm_region1_adoles)
+summary(lm_region_adoles)
+delta_adoles <- summary(lm_region_adoles)$coefficients[2,1]*10
+lower_adoles <- confint(lm_region_adoles)[2,1]*10
+upper_adoles <- confint(lm_region_adoles)[2,2]*10
 
-A_B_adoles1/(2063-1350)
-summary(lm_region1_adoles)$coefficients[2,1]*10
+adoles_change <- data.frame(
+  Age_group = "Adolescents (11-17y)",
+  Delta = round(delta_adoles,2),
+  Upper = round(upper_adoles,2),
+  Lower = round(lower_adoles,2)
+)
 
 # YOUNGER ADULTS ----
 # DATA
 
-load("path/act_15.rda")
-
 load("path/data_younger.rda")
 
-load("path/result_beta_younger.rda")
+load("path/beta_younger.rda")
 
 act_younger <- act %>% filter(age >=19 & age <45)
 
@@ -131,58 +121,42 @@ pa_younger <- act_younger %>%
   arrange(stno) %>%
   select(-gender, -age, -age_cat,-season,-edu)
 
-pa_younger_region1 <- pa_younger[,c(1,2:111)]
-pa_younger_region1 <- pa_younger_region1 %>% 
-  mutate(region1 = rowSums(across(-1))) %>%
-  select(stno, region1)
+pa_younger_region <- pa_younger[,c(1,972:2001)]
+pa_younger_region <- pa_younger_region %>% 
+  mutate(region = rowSums(across(-1))) %>%
+  select(stno, region)
 
-pa_younger_region2 <- pa_younger[,c(1,966:2182)]
-pa_younger_region2 <- pa_younger_region2 %>% 
-  mutate(region2 = rowSums(across(-1))) %>%
-  select(stno, region2)
 
-pa_younger_regions <- merge(pa_younger_region1,pa_younger_region2, by= "stno")
-
-data_younger <- merge(data_younger,pa_younger_regions, by= "stno")
+data_younger <- merge(data_younger,pa_younger_region, by= "stno")
 
 data_younger_region <- data_younger %>%
-  select(stno, bmi, region1, region2, wear_min_day, age, gender, edu_cat1, edu_cat2, 
-         study_cat1, season_cat1, season_cat2, season_cat3, study_cat1, study_cat2)
+  select(stno, bmi, region, wear_kernel, ACC_0_0, age, gender, edu_cat1, edu_cat2, 
+         study_cat1, season_cat1, season_cat2, season_cat3)
 
-# AREA UNDER THE CURVE (beta coefficients)
-# Region 1 (positive area between 1 and 110)
+# LINEAR MODEL FOR A SPECIFIC REGION
+# Region (negative area between 971 and 2000)
 
-idxB_younger1 <- which(s_grid >=1 & s_grid <= 110)
-A_B_younger1 <- sum(result_beta_younger[idxB_younger1,2]*ds)
+lm_region_younger <- lm(bmi ~ region + wear_kernel + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
+                      data = data_younger_region)
 
-lm_region1_younger <-  lm(bmi ~ region1 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                        data = data_younger_region)
-summary(lm_region1_younger)
+summary(lm_region_younger)
+delta_younger <- summary(lm_region_younger)$coefficients[2,1]*10
+lower_younger <- confint(lm_region_younger)[2,1]*10
+upper_younger <- confint(lm_region_younger)[2,2]*10
 
-A_B_younger1/(110-1)
-summary(lm_region1_younger)$coefficients[2,1]*10
-
-# Region 2 (negative area between 965 and 2181)
-
-idxB_younger2  <- which(s_grid >= 965 & s_grid <=2181)
-A_B_younger2 <- sum(result_beta_younger[idxB_younger2 ,2]*ds)
-
-lm_region2_younger <- lm(bmi ~ region2 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                       data = data_younger_region)
-
-summary(lm_region2_younger)
-
-A_B_younger2/(2181-965)
-summary(lm_region2_younger)$coefficients[2,1] *10
+younger_change <- data.frame(
+  Age_group = "Younger adults (45-64y)",
+  Delta = round(delta_younger,2),
+  Upper = round(upper_younger,2),
+  Lower = round(lower_younger,2)
+)
 
 # MIDDLE ADULTS ----
 # DATA
 
-load("path/act_15.rda")
-
 load("path/data_middle.rda")
 
-load("path/result_beta_middle.rda")
+load("path/beta_middle.rda")
 
 act_middle <- act %>% filter(age >=45 & age <65)
 
@@ -191,58 +165,41 @@ pa_middle <- act_middle %>%
   arrange(stno) %>%
   select(-gender, -age, -age_cat,-season,-edu)
 
-pa_middle_region1 <- pa_middle[,c(1,2:123)]
-pa_middle_region1 <- pa_middle_region1 %>% 
-  mutate(region1 = rowSums(across(-1))) %>%
-  select(stno, region1)
+pa_middle_region <- pa_middle[,c(1,836:2001)]
+pa_middle_region <- pa_middle_region %>% 
+  mutate(region = rowSums(across(-1))) %>%
+  select(stno, region)
 
-pa_middle_region2 <- pa_middle[,c(1,836:2255)]
-pa_middle_region2 <- pa_middle_region2 %>% 
-  mutate(region2 = rowSums(across(-1))) %>%
-  select(stno, region2)
-
-pa_middle_regions <- merge(pa_middle_region1,pa_middle_region2, by= "stno")
-
-data_middle <- merge(data_middle,pa_middle_regions, by= "stno")
+data_middle <- merge(data_middle,pa_middle_region, by= "stno")
 
 data_middle_region <- data_middle %>%
-  select(stno, bmi, region1, region2, wear_min_day, age, gender, edu_cat1, edu_cat2, 
-         study_cat1, season_cat1, season_cat2, season_cat3, study_cat1, study_cat2)
+  select(stno, bmi, region, wear_kernel, ACC_0_0, age, gender, edu_cat1, edu_cat2, 
+         study_cat1, season_cat1, season_cat2, season_cat3)
 
-# AREA UNDER THE CURVE (beta coefficients)
-# Region 1 (positive area between 1 and 122)
+# LINEAR MODEL FOR A SPECIFIC REGION
+# Region (negative area between 835 and 2000)
 
-idxB_middle1 <- which(s_grid >=1 & s_grid <= 122)
-A_B_middle1 <- sum(result_beta_middle[idxB_middle1,2]*ds)
+lm_region_middle <- lm(bmi ~ region + wear_kernel + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
+                      data = data_middle_region)
 
-lm_region1_middle <-  lm(bmi ~ region1 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                          data = data_middle_region)
-summary(lm_region1_middle)
+summary(lm_region_middle)
+delta_middle <- summary(lm_region_middle)$coefficients[2,1]*10
+lower_middle <- confint(lm_region_middle)[2,1]*10
+upper_middle <- confint(lm_region_middle)[2,2]*10
 
-A_B_middle1/(122-1)
-summary(lm_region1_middle)$coefficients[2,1]*10
-
-# Region 2 (negative area between 835 and 2254)
-
-idxB_middle2  <- which(s_grid >= 835 & s_grid <=2254)
-A_B_middle2 <- sum(result_beta_middle[idxB_middle2 ,2]*ds)
-
-lm_region2_middle <- lm(bmi ~ region2 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                         data = data_middle_region)
-
-summary(lm_region2_middle)
-
-A_B_middle2/(2254-835)
-summary(lm_region2_middle)$coefficients[2,1]*10
+middle_change <- data.frame(
+  Age_group = "Middle adults (45-64y)",
+  Delta = round(delta_middle,2),
+  Upper = round(upper_middle,2),
+  Lower = round(lower_middle,2)
+)
 
 # OLDER ADULTS ----
 # DATA
 
-load("path/act_15.rda")
-
 load("path/data_older.rda")
 
-load("path/result_beta_older.rda")
+load("path/beta_older.rda")
 
 act_older <- act %>% filter(age >=65)
 
@@ -251,47 +208,365 @@ pa_older <- act_older %>%
   arrange(stno) %>%
   select(-gender, -age, -age_cat,-season,-edu)
 
-pa_older_region1 <- pa_older[,c(1,2:115)]
-pa_older_region1 <- pa_older_region1 %>% 
-  mutate(region1 = rowSums(across(-1))) %>%
-  select(stno, region1)
+pa_older_region <- pa_older[,c(1,745:2001)]
+pa_older_region <- pa_older_region %>% 
+  mutate(region = rowSums(across(-1))) %>%
+  select(stno, region)
 
-pa_older_region2 <- pa_older[,c(1,748:1772)]
-pa_older_region2 <- pa_older_region2 %>% 
-  mutate(region2 = rowSums(across(-1))) %>%
-  select(stno, region2)
-
-pa_older_regions <- merge(pa_older_region1,pa_older_region2, by= "stno")
-
-data_older <- merge(data_older,pa_older_regions, by= "stno")
+data_older <- merge(data_older,pa_older_region, by= "stno")
 
 data_older_region <- data_older %>%
-  select(stno, bmi, region1, region2, wear_min_day, age, gender, edu_cat1, edu_cat2, 
-         study_cat1, season_cat1, season_cat2, season_cat3, study_cat1, study_cat2)
+  select(stno, bmi, region, wear_kernel, ACC_0_0, age, gender, edu_cat1, edu_cat2, 
+         study_cat1, season_cat1, season_cat2, season_cat3)
 
-# AREA UNDER THE CURVE (beta coefficients)
-# Region 1 (positive area between 1 and 114)
+# LINEAR MODEL FOR A SPECIFIC REGION
+# Region (negative area between 920 and 2000)
 
-idxB_older1 <- which(s_grid >=1 & s_grid <= 114)
-A_B_older1 <- sum(result_beta_older[idxB_older1,2]*ds)
+lm_region_older <- lm(bmi ~ region + wear_kernel + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
+                      data = data_older_region)
 
-lm_region1_older <-  lm(bmi ~ region1 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                         data = data_older_region)
-summary(lm_region1_older)
+summary(lm_region_older)
+delta_older <- summary(lm_region_older)$coefficients[2,1]*10
+lower_older <- confint(lm_region_older)[2,1]*10
+upper_older <- confint(lm_region_older)[2,2]*10
 
-A_B_older1/(114-1)
-summary(lm_region1_older)$coefficients[2,1]*10
+older_change <- data.frame(
+  Age_group = "Older adults (65-90y)",
+  Delta = round(delta_older,2),
+  Upper = round(upper_older,2),
+  Lower = round(lower_older,2)
+)
 
-# Region 2 (negative area between 747 and 1771)
+data_change <- rbind(child_change, adoles_change, younger_change, middle_change, older_change)
 
-idxB_older2  <- which(s_grid >= 747 & s_grid <=1771)
-A_B_older2 <- sum(result_beta_older[idxB_older2 ,2]*ds)
+write.csv(data_change, file="path/data_change_lm_15.csv", row.names = FALSE)
 
-lm_region2_older <- lm(bmi ~ region2 + wear_min_day + age + gender + edu_cat1 + edu_cat2 + season_cat1 + season_cat2 + season_cat3,
-                        data = data_older_region)
+# FUNCTIONAL APPROACH ----
+# CHILDREN (6-10y)----
 
-summary(lm_region2_older)
+load("path/beta_child.rda")
+load("path/beta_matrix_child.rda")
 
-A_B_older2/(1771-747)
-summary(lm_region2_older)$coefficients[2,1]*10
+Ngrid = 2000
+a0 = 918
+n = 1245
+B = 1000
+change = 10
 
+beta <- beta_child$value
+Y_Activity <- data_child$Y_Activity
+
+delta_vec  <- rep(NA, n)
+lower_vec  <- rep(NA, n)
+upper_vec  <- rep(NA, n)
+
+for(i in 1:n){
+  
+  T_i = data_child$wear_kernel[i]
+  
+  xtime_i = sum(Y_Activity[i, a0:Ngrid])
+  ri = -1 + (xtime_i + change)/xtime_i   
+  
+  int_fi_a0 = xtime_i / T_i
+  si = (ri * int_fi_a0) / (1 - int_fi_a0)
+  
+  fhat_i = c((1-si)*Y_Activity[i, 1:(a0-1)]/T_i,
+             (1+ri)*Y_Activity[i, a0:Ngrid]/T_i)
+  
+  Ahat_i = fhat_i * T_i
+  
+  delta_i = sum(beta * Ahat_i) - sum(beta * Y_Activity[i, 1:Ngrid]) 
+  delta_vec[i] = delta_i
+  
+  # Bootstrap CI
+  v_delta = rep(NA, B)
+  for(b in 1:B){
+    v_delta[b] = sum(beta_mat_boot_child[b,1:Ngrid] * Ahat_i) -
+      sum(beta_mat_boot_child[b,1:Ngrid] * Y_Activity[i,1:Ngrid])
+  }
+  
+  lower_vec[i] = quantile(v_delta, 0.025)
+  upper_vec[i] = quantile(v_delta, 0.975)
+}
+
+results_child <- data.frame(
+  i = 1:n,
+  delta_i = delta_vec,
+  upper = upper_vec,
+  lower = lower_vec
+)
+
+mean(results_child$delta_i)
+mean(results_child$upper)
+mean(results_child$lower)
+
+# ADOLESCENTS (11-17y)----
+
+load("path/beta_adoles.rda")
+load("path/beta_matrix_adoles.rda")
+
+Ngrid = 2000
+a0 = 1361
+n = 465
+B = 1000
+change = 10
+
+beta <- beta_adoles$value
+Y_Activity <- data_adoles$Y_Activity
+
+delta_vec  <- rep(NA, n)
+lower_vec  <- rep(NA, n)
+upper_vec  <- rep(NA, n)
+
+for(i in 1:n){
+  
+  T_i = data_adoles$wear_kernel[i]
+  
+  xtime_i = sum(Y_Activity[i, a0:Ngrid])
+  ri = -1 + (xtime_i + change)/xtime_i   
+  
+  int_fi_a0 = xtime_i / T_i
+  si = (ri * int_fi_a0) / (1 - int_fi_a0)
+  
+  fhat_i = c((1-si)*Y_Activity[i, 1:(a0-1)]/T_i,
+             (1+ri)*Y_Activity[i, a0:Ngrid]/T_i)
+  
+  Ahat_i = fhat_i * T_i
+  
+  delta_i = sum(beta * Ahat_i) - sum(beta * Y_Activity[i, 1:Ngrid]) 
+  delta_vec[i] = delta_i
+  
+  # Bootstrap CI
+  v_delta = rep(NA, B)
+  for(b in 1:B){
+    v_delta[b] = sum(beta_mat_boot_adoles[b,1:Ngrid] * Ahat_i) -
+      sum(beta_mat_boot_adoles[b,1:Ngrid] * Y_Activity[i,1:Ngrid])
+  }
+  
+  lower_vec[i] = quantile(v_delta, 0.025)
+  upper_vec[i] = quantile(v_delta, 0.975)
+}
+
+results_adoles <- data.frame(
+  i = 1:n,
+  delta_i = delta_vec,
+  upper = upper_vec,
+  lower = lower_vec
+)
+
+mean(results_adoles$delta_i)
+mean(results_adoles$upper)
+mean(results_adoles$lower)
+
+# YOUNGER ADULTS (18-44y) ----
+
+load("path/beta_younger.rda")
+load("path/beta_matrix_younger.rda")
+
+Ngrid = 2000
+a0 = 972
+n = 1447
+B = 1000
+change = 10
+
+beta <- beta_younger$value
+Y_Activity <- data_younger$Y_Activity
+
+delta_vec  <- rep(NA, n)
+lower_vec  <- rep(NA, n)
+upper_vec  <- rep(NA, n)
+
+for(i in 1:n){
+  
+  T_i = data_younger$wear_kernel[i]
+  
+  xtime_i = sum(Y_Activity[i, a0:Ngrid])
+  ri = -1 + (xtime_i + change)/xtime_i   
+  
+  int_fi_a0 = xtime_i / T_i
+  si = (ri * int_fi_a0) / (1 - int_fi_a0)
+  
+  fhat_i = c((1-si)*Y_Activity[i, 1:(a0-1)]/T_i,
+             (1+ri)*Y_Activity[i, a0:Ngrid]/T_i)
+  
+  Ahat_i = fhat_i * T_i
+  
+  delta_i = sum(beta * Ahat_i) - sum(beta * Y_Activity[i, 1:Ngrid]) 
+  delta_vec[i] = delta_i
+  
+  # Bootstrap CI
+  v_delta = rep(NA, B)
+  for(b in 1:B){
+    v_delta[b] = sum(beta_mat_boot_younger[b,1:Ngrid] * Ahat_i) -
+      sum(beta_mat_boot_younger[b,1:Ngrid] * Y_Activity[i,1:Ngrid])
+  }
+  
+  lower_vec[i] = quantile(v_delta, 0.025)
+  upper_vec[i] = quantile(v_delta, 0.975)
+}
+
+results_younger <- data.frame(
+  i = 1:n,
+  delta_i = delta_vec,
+  upper = upper_vec,
+  lower = lower_vec
+)
+
+mean(results_younger$delta_i)
+mean(results_younger$upper)
+mean(results_younger$lower)
+
+# MIDDLE-AGE ADULTS(45-64y) ----
+
+load("path/beta_middle.rda")
+load("path/beta_matrix_middle.rda")
+
+Ngrid = 2000
+a0 = 835
+n = 1756
+B = 1000
+change = 10
+
+beta <- beta_middle$value
+Y_Activity <- data_middle$Y_Activity
+
+delta_vec  <- rep(NA, n)
+lower_vec  <- rep(NA, n)
+upper_vec  <- rep(NA, n)
+
+for(i in 1:n){
+  
+  T_i = data_middle$wear_kernel[i]
+  
+  xtime_i = sum(Y_Activity[i, a0:Ngrid])
+  ri = -1 + (xtime_i + change)/xtime_i   
+  
+  int_fi_a0 = xtime_i / T_i
+  si = (ri * int_fi_a0) / (1 - int_fi_a0)
+  
+  fhat_i = c((1-si)*Y_Activity[i, 1:(a0-1)]/T_i,
+             (1+ri)*Y_Activity[i, a0:Ngrid]/T_i)
+  
+  Ahat_i = fhat_i * T_i
+  
+  delta_i = sum(beta * Ahat_i) - sum(beta * Y_Activity[i, 1:Ngrid]) 
+  delta_vec[i] = delta_i
+  
+  # Bootstrap CI
+  v_delta = rep(NA, B)
+  for(b in 1:B){
+    v_delta[b] = sum(beta_mat_boot_middle[b,1:Ngrid] * Ahat_i) -
+      sum(beta_mat_boot_middle[b,1:Ngrid] * Y_Activity[i,1:Ngrid])
+  }
+  
+  lower_vec[i] = quantile(v_delta, 0.025)
+  upper_vec[i] = quantile(v_delta, 0.975)
+}
+
+results_middle <- data.frame(
+  i = 1:n,
+  delta_i = delta_vec,
+  upper = upper_vec,
+  lower = lower_vec
+)
+
+mean(results_middle$delta_i)
+mean(results_middle$upper)
+mean(results_middle$lower)
+
+# OLDER ADULTS (65-90y) ----
+
+load("path/beta_older.rda")
+load("path/beta_matrix_older.rda")
+
+Ngrid = 2000
+a0 = 744
+n = 1049
+B = 1000
+change = 10
+
+beta <- beta_older$value
+Y_Activity <- data_older$Y_Activity
+
+delta_vec  <- rep(NA, n)
+lower_vec  <- rep(NA, n)
+upper_vec  <- rep(NA, n)
+
+for(i in 1:n){
+  
+  T_i = data_older$wear_kernel[i]
+  
+  xtime_i = sum(Y_Activity[i, a0:Ngrid])
+  ri = -1 + (xtime_i + change)/xtime_i   
+  
+  int_fi_a0 = xtime_i / T_i
+  si = (ri * int_fi_a0) / (1 - int_fi_a0)
+  
+  fhat_i = c((1-si)*Y_Activity[i, 1:(a0-1)]/T_i,
+             (1+ri)*Y_Activity[i, a0:Ngrid]/T_i)
+  
+  Ahat_i = fhat_i * T_i
+  
+  delta_i = sum(beta * Ahat_i) - sum(beta * Y_Activity[i, 1:Ngrid]) 
+  delta_vec[i] = delta_i
+  
+  # Bootstrap CI
+  v_delta = rep(NA, B)
+  for(b in 1:B){
+    v_delta[b] = sum(beta_mat_boot_older[b,1:Ngrid] * Ahat_i) -
+      sum(beta_mat_boot_older[b,1:Ngrid] * Y_Activity[i,1:Ngrid])
+  }
+  
+  lower_vec[i] = quantile(v_delta, 0.025)
+  upper_vec[i] = quantile(v_delta, 0.975)
+}
+
+results_older <- data.frame(
+  i = 1:n,
+  delta_i = delta_vec,
+  upper = upper_vec,
+  lower = lower_vec
+)
+
+mean(results_older$delta_i)
+mean(results_older$upper)
+mean(results_older$lower)
+
+child_change <- data.frame(
+  Age_group = "Children (6-10y)",
+  Delta = round(mean(results_child$delta_i),2),
+  Upper = round(mean(results_child$upper),2),
+  Lower = round(mean(results_child$lower),2)
+)
+
+adoles_change <- data.frame(
+  Age_group = "Adolescents (11-17y)",
+  Delta = round(mean(results_adoles$delta_i),2),
+  Upper = round(mean(results_adoles$upper),2),
+  Lower = round(mean(results_adoles$lower),2)
+)
+
+younger_change <- data.frame(
+  Age_group = "Younger adults (18-44y)",
+  Delta = round(mean(results_younger$delta_i),2),
+  Upper = round(mean(results_younger$upper),2),
+  Lower = round(mean(results_younger$lower),2)
+)
+
+middle_change <- data.frame(
+  Age_group = "Middle-age adults (45-64y)",
+  Delta = round(mean(results_middle$delta_i),2),
+  Upper = round(mean(results_middle$upper),2),
+  Lower = round(mean(results_middle$lower),2)
+)
+
+older_change <- data.frame(
+  Age_group = "Older adults (65-90y)",
+  Delta = round(mean(results_older$delta_i),2),
+  Upper = round(mean(results_older$upper),2),
+  Lower = round(mean(results_older$lower),2)
+)
+
+data_change <- rbind(child_change, adoles_change, younger_change, middle_change, older_change)
+
+write.csv(data_change, file="path/data_change_functional_15.csv", row.names = FALSE)
