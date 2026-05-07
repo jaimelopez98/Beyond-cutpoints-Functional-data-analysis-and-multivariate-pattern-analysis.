@@ -94,7 +94,6 @@ older_data <- read.csv("path/older_adjusted_Multivariate correlation coefficient
   mutate(
     acc = mpa_cuts)
 
-
 plot_presc <- mpa_15_plot(presc_data,mpa_cuts = mpa_cuts, mpa_labels = mpa_labels,col_plot = rgb(0.27, 0.95, 0.95, alpha = 0.5), title ="a. Preschoolers (3-5y)")
 
 plot_child <- mpa_15_plot(child_data,mpa_cuts = mpa_cuts, mpa_labels = mpa_labels,col_plot = rgb(1, 1, 0, alpha = 0.5), title ="b. Children (6-10y)")
@@ -106,7 +105,6 @@ plot_younger <- mpa_15_plot(younger_data,mpa_cuts = mpa_cuts, mpa_labels = mpa_l
 plot_middle <- mpa_15_plot(middle_data,mpa_cuts = mpa_cuts, mpa_labels = mpa_labels,col_plot = rgb(0.7, 0.07, 0.96, alpha = 0.5), title ="e. Middle Adults (45-64y)")
 
 plot_older <- mpa_15_plot(older_data,mpa_cuts = mpa_cuts, mpa_labels = mpa_labels,col_plot = rgb(0, 1, 0, alpha = 0.5), title ="e. Older adults (65-90y)")
-
 
 plot_presc + plot_child + plot_adoles +
   plot_layout(ncol = 1)
